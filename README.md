@@ -23,8 +23,7 @@ downstream tasks, released for the Nature Medicine resubmission.
   heads for classification, dense segmentation, and multimodal fusion.
 
 All hyperparameters live in a single source of truth:
-[`configs/cora_config.yaml`](configs/cora_config.yaml). The paper, this README,
-and the code all derive their numbers from that file.
+[`configs/cora_config.yaml`](configs/cora_config.yaml). 
 
 ---
 
@@ -79,7 +78,7 @@ See [`preprocessing/README.md`](preprocessing/README.md). A patient index file
 (Excel) listing subject identifiers is required.
 
 > **Pretraining cohort:** the pretraining index must contain **only pretraining
-> patients (10,138 unlabeled CCTA volumes)** — all internal and external test
+> patients** — all internal and external test
 > patients are excluded. No script hard-codes a cohort count or a list file that
 > would place test patients in the pretraining set.
 
