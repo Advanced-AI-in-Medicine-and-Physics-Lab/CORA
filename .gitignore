@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+.DS_Store
+
+# Local data, weights, and outputs (not tracked)
+checkpoints/*.pth
+checkpoints/**/*.pth
+*.npz
+*.nii
+*.nii.gz
+outputs/
+runs/
+*.log

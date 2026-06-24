@@ -1,0 +1,14 @@
+torch>=2.0
+numpy
+scipy
+pandas
+scikit-learn
+scikit-image
+tqdm
+matplotlib
+pyyaml
+openpyxl
+SimpleITK
+monai
+transformers
+dynamic-network-architectures

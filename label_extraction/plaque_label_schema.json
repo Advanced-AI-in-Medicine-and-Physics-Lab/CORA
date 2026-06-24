@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CORA plaque / stenosis label extraction schema",
+  "description": "Structured output produced by the two-LLM (GPT-4o + Claude Sonnet 4.5) extraction over CCTA radiology reports. One object per report. See plaque_stenosis_extraction_prompt.txt for the full instruction.",
+  "type": "object",
+  "required": ["ccta_performed", "LM", "LAD", "LCX", "RCA"],
+  "properties": {
+    "ccta_performed": {
+      "type": "boolean",
+      "description": "False if the report contains only a calcium score with no contrast CCTA angiographic read."
+    },
+    "LM": {"$ref": "#/definitions/vessel"},
+    "LAD": {"$ref": "#/definitions/vessel"},
+    "LCX": {"$ref": "#/definitions/vessel"},
+    "RCA": {"$ref": "#/definitions/vessel"}
+  },
+  "definitions": {
+    "vessel": {
+      "type": "object",
+      "required": [
+        "calcified_plaque",
+        "non_calcified_plaque",
+        "stenosis_present",
+        "stenosis_grade",
+        "stenosis_percent"
+      ],
+      "properties": {
+        "calcified_plaque": {
+          "type": "string",
+          "enum": ["yes", "no", "unknown", "not_mentioned"]
+        },
+        "non_calcified_plaque": {
+          "type": "string",
+          "enum": ["yes", "no", "unknown", "not_mentioned"]
+        },
+        "stenosis_present": {
+          "type": "string",
+          "enum": ["yes", "no", "not_evaluable", "not_mentioned"]
+        },
+        "stenosis_grade": {
+          "type": "string",
+          "enum": ["none", "minimal", "mild", "moderate", "severe", "occluded", "not_evaluable", "not_mentioned"]
+        },
+        "stenosis_percent": {
+          "type": ["string", "null"],
+          "description": "Verbatim percentage/qualifier, e.g. \"50-60%\"; null if none stated."
+        }
+      }
+    }
+  }
+}

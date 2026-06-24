@@ -1,0 +1,121 @@
+# =============================================================================
+# CORA — Authoritative configuration (single source of truth)
+# =============================================================================
+# Every numeric hyperparameter reported in the manuscript is defined here so
+# that the paper, README, and code cannot drift apart. Scripts read their
+# values from this file; do NOT hard-code these constants elsewhere.
+#
+# Values below match the manuscript (Nature Medicine resubmission).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Data / preprocessing
+# -----------------------------------------------------------------------------
+data:
+  # Voxel spacing after resampling, in mm (x, y, z).
+  # The pipeline resamples to ISOTROPIC 0.5 mm, consistent with the isotropic
+  # 96^3 patch architecture (manuscript Table 2).
+  voxel_spacing: [0.5, 0.5, 0.5]
+  # Intensity normalization clip percentiles applied during preprocessing.
+  clip_percentiles: [0.5, 99.5]
+  # Minimum connected-component size (voxels) kept in the coronary artery mask.
+  min_component_voxels: 500
+
+# -----------------------------------------------------------------------------
+# Multi-window 4-channel input (HU window center, width)
+# -----------------------------------------------------------------------------
+windows:
+  fat:           {center: -100, width: 140}   # (-100, 140) HU
+  soft_tissue:   {center: 50,   width: 400}   # (50, 400) HU
+  angiographic:  {center: 350,  width: 700}   # (350, 700) HU
+  calcification: {center: 500,  width: 2000}  # (500, 2000) HU
+
+# -----------------------------------------------------------------------------
+# Pretraining (synthesis-driven self-supervised learning)
+# -----------------------------------------------------------------------------
+pretrain:
+  patch_shape: [96, 96, 96]      # artery-centric sampling patch size
+  min_mask_voxels: 50            # min vessel voxels for artery-centric sampling
+  epochs: 50
+  batch_size: 24
+  learning_rate: 1.0e-4          # AdamW peak LR
+  weight_decay: 1.0e-5
+  warmup_epochs: 3
+  val_fraction: 0.05             # held-out fraction for the validation loop
+  early_stopping_patience: 8     # epochs without val improvement before stop
+  seed: 42
+
+  # Synthetic lesion HU ranges
+  lesion:
+    calcified_hu: [800, 1500]
+    soft_hu: [30, 90]
+    blob_sigma: [0.7, 2.0]       # Gaussian blob sigma range
+    blob_count: [1, 3]           # number of overlapping blobs
+
+  # Poisson noise via Beer-Lambert approximation
+  noise:
+    I0: 1.0e5                    # incident photon count
+    L: 200.0                     # equivalent path length (mm)
+    sigma_e: 2.0                 # electronic background noise (HU)
+
+  # Loss: Tversky (recall-prioritized) + Focal
+  loss:
+    tversky_alpha: 0.1
+    tversky_beta: 0.9
+    focal_gamma: 4.0
+
+# -----------------------------------------------------------------------------
+# Backbone (3D Residual U-Net, 4-stage; manuscript Table 2)
+# -----------------------------------------------------------------------------
+model:
+  num_input_channels: 4
+  n_stages: 4
+  features_per_stage: [32, 64, 128, 256]
+  n_blocks_per_stage: [1, 3, 4, 4]
+  strides: [[1, 1, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2]]
+
+# -----------------------------------------------------------------------------
+# Downstream tasks
+# -----------------------------------------------------------------------------
+downstream:
+  plaque_characterization:
+    # Volume-level multi-label classification (calcified / non-calcified).
+    epochs: 50
+    batch_size: 4
+    learning_rate: 5.0e-5
+    weight_decay: 1.0e-5
+
+  stenosis_detection:
+    # Segmentation formulation; lesion-level evaluation by connected-component
+    # matching (>10-voxel overlap counts as a true positive).
+    patch_shape: [96, 96, 96]
+    overlap_threshold_voxels: 10
+    epochs: 100
+    batch_size: 4
+    learning_rate: 1.0e-4
+
+  coronary_segmentation:
+    # ImageCAS; pretrained encoder + randomly initialized decoder; Dice loss.
+    patch_shape: [96, 96, 96]
+    epochs: 100
+    batch_size: 4
+    learning_rate: 1.0e-4
+
+  mace_prediction:
+    # Multimodal: CORA image encoder + frozen Qwen text encoder + clinical MLP.
+    text_encoder: "Qwen/Qwen2.5-7B"     # frozen; replace with local path if cached
+    freeze_text_encoder: true
+    epochs: 50
+    batch_size: 4
+    learning_rate: 5.0e-5
+    weight_decay: 1.0e-5
+    n_folds: 5
+
+# -----------------------------------------------------------------------------
+# Cohort bookkeeping (for documentation only; not used by training code)
+# -----------------------------------------------------------------------------
+cohort:
+  # Unlabeled CCTA volumes used for pretraining, AFTER excluding all internal
+  # and external test patients. No script should hard-code a count or a list
+  # file that implies test patients are part of the pretraining set.
+  pretraining_volumes: 10138
