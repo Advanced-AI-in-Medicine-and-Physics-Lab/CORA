@@ -145,8 +145,7 @@ To train a **from-scratch baseline**, omit `--pretrained` (random encoder init).
 ## Pretrained weights
 
 Pretrained CORA weights and fine-tuned task checkpoints are released as external
-assets; see [`checkpoints/README.md`](checkpoints/README.md) for links
-(placeholders pending release) and a minimal load-and-run example.
+assets; see [`checkpoints/README.md`](checkpoints/README.md) for links and a minimal load-and-run example.
 
 ---
 
