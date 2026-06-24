@@ -6,7 +6,7 @@ assets (they are too large to track in git).
 | Checkpoint | Description | Link |
 |------------|-------------|------|
 | `cora_pretrained_best.pth` | CORA self-supervised encoder-decoder |[Google Drive](https://drive.google.com/file/d/1ATK9GbN5wt89HkSZRUI2z9WoFGNFfwbb/view?usp=sharing) |
-| Downstream task checkpoints | Fine-tuned plaque / stenosis / coronary-seg / MACE models | _placeholder — to be added_ |
+| Downstream task checkpoints | Fine-tuned plaque / stenosis / coronary-seg / MACE models | to be added_ |
 
 Once released, place `cora_pretrained_best.pth` in this directory (or pass its
 path via `--pretrained` to any downstream `train.py`).
