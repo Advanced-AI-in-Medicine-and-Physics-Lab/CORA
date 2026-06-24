@@ -151,14 +151,6 @@ assets; see [`checkpoints/README.md`](checkpoints/README.md) for links
 
 ---
 
-## Manuscript ↔ code consistency
-
-This release resolves the numerical inconsistencies raised in review. The
-authoritative values are those in `configs/cora_config.yaml`; notably the voxel
-spacing is **isotropic `0.5 × 0.5 × 0.5 mm³`** (consistent with the isotropic
-`96³` patch architecture), the pretraining patch size is `96³`, the noise model
-uses `I0=1e5 / σ_e=2.0`, and the blob sigma range is `0.7–2.0`.
-
 ## Label extraction
 
 Volume-level plaque/stenosis labels were extracted from CCTA reports by two LLMs
