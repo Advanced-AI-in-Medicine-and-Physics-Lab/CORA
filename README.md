@@ -126,7 +126,7 @@ Each downstream module has its own `train.py`, `eval.py`, `dataset.py`, and
 | Plaque characterization | `downstream/plaque_characterization/` | volume-level multi-label classification | AUROC / AUPRC / F1 |
 | Stenosis detection | `downstream/stenosis_detection/` | segmentation + lesion-level matching | lesion sensitivity / precision / F1 (>10-voxel overlap = TP) |
 | Coronary artery segmentation | `downstream/coronary_segmentation/` | ImageCAS dense segmentation (Dice loss) | Dice / clDice / MSD |
-| MACE prediction | `downstream/mace_prediction/` | multimodal (image + frozen Qwen + clinical) | C-index / AUROC |
+| MACE prediction | `downstream/mace_prediction/` | multimodal (image + frozen Qwen + clinical) | AUROC |
 
 Example (plaque characterization):
 
