@@ -1,4 +1,4 @@
-# CORA: COronary Representation learning via Abnormality synthesis for CVD analysis
+# CORA: COronary Representation learning via Abnormality synthesis for CAD analysis
 
 CORA is a self-supervised framework for coronary CT angiography (CCTA). A 3D
 Residual U-Net is pretrained to segment **synthetically inserted coronary
