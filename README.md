@@ -7,7 +7,7 @@ representations toward clinically relevant vascular pathology. The pretrained
 encoder is then fine-tuned for four downstream tasks.
 
 This repository contains the **complete** code for pretraining and all
-downstream tasks, released for the Nature Medicine resubmission.
+downstream tasks.
 
 ---
 
